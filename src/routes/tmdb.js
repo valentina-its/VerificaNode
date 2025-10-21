@@ -1,5 +1,5 @@
 const express = require('express');
-const { trending, multiSearch } = require('../controllers/tmdbController');
+const { trending, multiSearch } = require('../controllers/tmdbController'); 
 
 const router = express.Router();
 
