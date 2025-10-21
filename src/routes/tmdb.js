@@ -1,5 +1,5 @@
 const express = require('express');
-const { trending, multiSearch } = require('../controllers/tmdbController'); 
+const { trending, popular } = require('../controllers/tmdbController');
 
 const router = express.Router();
 
@@ -12,5 +12,6 @@ const wrap = (handler) => async (req, res, next) => {
 };
 
 router.get('/trending', wrap(trending));
+router.get('/popular', wrap(popular));
 
 module.exports = router;

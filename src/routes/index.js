@@ -2,7 +2,6 @@ const express = require('express');
 const authRoutes = require('./auth');
 const tmdbRoutes = require('./tmdb');
 const auth = require('../middleware/auth');
-const tmdbAxiosRoutes = require('./tmdbAxios');
 const favoritesRoutes = require('./favorites');
 
 const router = express.Router();
