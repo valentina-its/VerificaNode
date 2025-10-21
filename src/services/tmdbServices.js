@@ -69,7 +69,6 @@ const fetchMovieById = async (tmdbId) => {
     return response.data;
 };
 
-// Aggiunta: combinazione di Trending + Popular
 const fetchCombinedContent = async () => {
     try {
         const [trendingData, popularData] = await Promise.all([
