@@ -1,5 +1,5 @@
 const express = require('express');
-const { createList, getLists, getList, deleteList, addMovieToList, removeMovieFromList } = require('../controllers/listsController');
+const { createList, getLists, getList, deleteList, addMovieToList, removeMovieFromList, updateMovieInList } = require('../controllers/listsController');
 
 const router = express.Router();
 
@@ -17,5 +17,6 @@ router.get('/:listId', wrap(getList));
 router.delete('/:listId', wrap(deleteList));
 router.post('/:listId/movies', wrap(addMovieToList));
 router.delete('/:listId/movies/:movieId', wrap(removeMovieFromList));
+router.patch('/:listId/movies/:movieId', wrap(updateMovieInList));
 
 module.exports = router;

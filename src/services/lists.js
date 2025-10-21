@@ -22,9 +22,16 @@ async function deleteListById(listId) {
 }
 
 async function addMovieToList(listId, movieData) {
+    const movieWithDefaults = {
+        ...movieData,
+        rating: null,
+        comment: '',
+        status: 'da vedere'
+    };
+
     return List.findByIdAndUpdate(
         listId,
-        { $push: { movies: movieData } },
+        { $push: { movies: movieWithDefaults } },
         { new: true }
     );
 }
@@ -38,11 +45,27 @@ async function removeMovieFromList(listId, movieId) {
     );
 }
 
+async function updateMovieInList(listId, movieId, data) {
+    const movieObjectId = new mongoose.Types.ObjectId(movieId);
+
+    const set = {};
+    if (data.rating !== undefined) set['movies.$.rating'] = data.rating;
+    if (data.comment !== undefined) set['movies.$.comment'] = data.comment;
+    if (data.status !== undefined) set['movies.$.status'] = data.status;
+
+    return List.findOneAndUpdate(
+        { _id: listId, 'movies._id': movieObjectId },
+        { $set: set },
+        { new: true }
+    );
+}
+
 module.exports = {
     createList,
     getListsByUser,
     getListById,
     deleteListById,
     addMovieToList,
-    removeMovieFromList
+    removeMovieFromList,
+    updateMovieInList
 };

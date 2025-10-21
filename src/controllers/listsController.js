@@ -67,7 +67,7 @@ async function addMovieToList(req, res) {
     }
 
     try {
-      
+
         const data = await fetchMovieById(idNum);
         const movieData = {
             tmdbId: idNum,
@@ -114,4 +114,70 @@ async function removeMovieFromList(req, res) {
     }
 }
 
-module.exports = { createList, getLists, getList, deleteList, addMovieToList, removeMovieFromList };
+async function updateMovieInList(req, res) {
+    const userId = req.userId;
+    const { listId, movieId } = req.params;
+    const body = req.body || {};
+    const { rating, comment, status } = body;
+
+    if (!mongoose.Types.ObjectId.isValid(movieId)) {
+        return res.status(400).json({ message: 'movieId not valid' });
+    }
+
+    // Se il body manca o nessun campo da aggiornare è presente -> 400
+    const hasAnyField =
+        rating !== undefined || comment !== undefined || status !== undefined;
+    if (!hasAnyField) {
+        return res.status(400).json({ message: 'No fields to update' });
+    }
+
+    // Validate rating se fornito
+    if (rating !== undefined && rating !== null) {
+        const ratingNum = Number(rating);
+        if (!Number.isInteger(ratingNum) || ratingNum < 1 || ratingNum > 10) {
+            return res.status(400).json({ message: 'Rating must be a number between 1 and 10' });
+        }
+    }
+
+    // Validate status se fornito
+    if (status !== undefined && status !== null) {
+        if (!['visto', 'da vedere'].includes(String(status))) {
+            return res.status(400).json({ message: 'Status must be either "visto" or "da vedere"' });
+        }
+    }
+
+    const list = await listsService.getListById(listId);
+    if (!list) {
+        return res.status(404).json({ message: 'List not found' });
+    }
+    if (String(list.userId) !== String(userId)) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    const movie = (list.movies || []).find(m => String(m._id) === String(movieId));
+    if (!movie) {
+        return res.status(404).json({ message: 'Movie not found in list' });
+    }
+
+    try {
+        const updateData = {};
+        if (rating !== undefined) updateData.rating = Number(rating);
+        if (comment !== undefined) updateData.comment = comment;
+        if (status !== undefined) updateData.status = status;
+
+        const updatedList = await listsService.updateMovieInList(listId, movieId, updateData);
+        return res.json(updatedList);
+    } catch (err) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+module.exports = {
+    createList,
+    getLists,
+    getList,
+    deleteList,
+    addMovieToList,
+    removeMovieFromList,
+    updateMovieInList
+};

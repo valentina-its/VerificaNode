@@ -9,6 +9,9 @@ const favoriteSchema = new mongoose.Schema(
         posterPath: { type: String },
         releaseDate: { type: String },
         voteAverage: { type: Number },
+        status: { type: String, enum: ['visto', 'da vedere'], default: 'da vedere' },
+        comment: { type: String },
+        rating: { type: Number, min: 1, max: 10 },
         createdAt: { type: Date, default: Date.now }
     },
     { versionKey: false }
