@@ -14,5 +14,6 @@ const wrap = (handler) => async (req, res, next) => {
 router.post('/', wrap(addFavorite));
 router.get('/', wrap(listFavorites));
 router.delete('/:tmdbId', wrap(removeFavorite));
+router.put('/:tmdbId', wrap(updateFavorite));
 
 module.exports = router;

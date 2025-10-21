@@ -2,7 +2,7 @@ const favoritesService = require('../services/favoritesServices');
 
 async function addFavorite(req, res) {
     const userId = req.userId;
-    const { tmdbId, title, overview, posterPath, releaseDate, voteAverage } = req.body;
+    const { tmdbId, title, overview, posterPath, releaseDate, voteAverage, status, comment, rating } = req.body;
 
     const idNum = parseInt(tmdbId, 10);
     if (!Number.isFinite(idNum) || typeof title !== 'string' || title.trim().length === 0) {
@@ -17,13 +17,36 @@ async function addFavorite(req, res) {
             overview,
             posterPath,
             releaseDate,
-            voteAverage
+            voteAverage,
+            status,
+            comment,
+            rating
         });
         return res.status(201).json(fav);
     } catch (err) {
         if (err.code === 11000) {
             return res.status(409).json({ message: 'Film already in favorites' });
         }
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+async function updateFavorite(req, res) {
+    const userId = req.userId;
+    const idNum = parseInt(req.params.tmdbId, 10);
+    const { status, comment, rating } = req.body;
+
+    if (!Number.isFinite(idNum)) {
+        return res.status(400).json({ message: 'tmdbId not valid' });
+    }
+
+    try {
+        const updatedFav = await favoritesService.updateFavorite(userId, idNum, { status, comment, rating });
+        if (!updatedFav) {
+            return res.status(404).json({ message: 'Favorite not found' });
+        }
+        return res.json(updatedFav);
+    } catch (err) {
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
@@ -47,4 +70,4 @@ async function removeFavorite(req, res) {
     return res.status(204).send();
 }
 
-module.exports = { addFavorite, listFavorites, removeFavorite };
+module.exports = { addFavorite, listFavorites, removeFavorite, updateFavorite };
