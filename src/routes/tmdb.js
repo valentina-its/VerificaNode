@@ -1,6 +1,5 @@
 const express = require('express');
-const { trending, popular, multiSearch, combinedContent } = require('../controllers/tmdbController');
-const { trending, getAllMovies } = require('../controllers/tmdbController');
+const { trending, popular, multiSearch, combinedContent, getAllMovies } = require('../controllers/tmdbController');
 
 const router = express.Router();
 
