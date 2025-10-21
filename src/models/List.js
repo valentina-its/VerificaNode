@@ -12,7 +12,10 @@ const listSchema = new mongoose.Schema(
                 overview: { type: String },
                 posterPath: { type: String },
                 releaseDate: { type: String },
-                voteAverage: { type: Number }
+                voteAverage: { type: Number },
+                rating: { type: Number, min: 1, max: 10 },
+                comment: { type: String },
+                status: { type: String, enum: ['visto', 'da vedere'], default: 'da vedere' }
             }
         ],
         createdAt: { type: Date, default: Date.now }
