@@ -1,5 +1,5 @@
 const express = require('express');
-const { addFavorite, listFavorites, removeFavorite } = require('../controllers/favoritesController');
+const { addFavorite, listFavorites, removeFavorite, updateFavorite } = require('../controllers/favoritesController');
 
 const router = express.Router();
 
