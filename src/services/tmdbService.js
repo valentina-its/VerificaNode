@@ -7,6 +7,9 @@ const fetchPopularMovie = async () => { // Funzione per ottenere i film popolari
         return response.data;
     } catch (error) {
         console.error('Error fetching popular movies:', error.message);
+        if (error.response) {
+            console.error('TMDB API Error Response (Popular Movies):', error.response.data);
+        }
         throw error;
     }
 };
@@ -14,11 +17,19 @@ const fetchPopularMovie = async () => { // Funzione per ottenere i film popolari
 const fetchTrending = async (page = 1) => {
     const safePage = !Number.isFinite(page) || page < 1 ? 1 : Math.min(page, 1000);
     const url = `${tmdbApiUrl}/trending/movie/week`;
-    const response = await axios.get(url, {
-        params: { api_key: tmdbApiKey, page: safePage },
-        timeout: 10000
-    });
-    return response.data;
+    try {
+        const response = await axios.get(url, {
+            params: { api_key: tmdbApiKey, page: safePage },
+            timeout: 10000
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching trending movies:', error.message);
+        if (error.response) {
+            console.error('TMDB API Error Response (Trending Movies):', error.response.data);
+        }
+        throw error;
+    }
 };
 
 const searchMulti = async (query, page = 1) => {

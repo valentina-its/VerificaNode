@@ -1,4 +1,3 @@
-const { getTrending } = require('../services/tmdb');
 const { fetchPopularMovie, fetchTrending, searchMulti } = require('../services/tmdbService');
 
 async function trending(req, res) {
@@ -49,4 +48,29 @@ async function multiSearch(req, res) {
     }
 }
 
-module.exports = { trending, popular, multiSearch };
+async function combinedContent(req, res) {
+    let page = parseInt(req.query.page, 10);
+    if (!Number.isFinite(page)) page = 1;
+    if (page < 1) page = 1;
+    if (page > 1000) page = 1000;
+
+    try {
+        const trendingData = await fetchTrending(page);
+        const popularData = await fetchPopularMovie();
+
+        const combinedResults = {
+            trending: trendingData.results,
+            popular: popularData.results,
+            page: page,
+            total_pages: Math.max(trendingData.total_pages, popularData.total_pages),
+            total_results: trendingData.total_results + popularData.total_results
+        };
+
+        return res.json(combinedResults);
+    } catch (error) {
+        console.error('Error during combined content fetch:', error.message);
+        return res.status(500).json({ error: 'Internal server error during combined content fetch' });
+    }
+}
+
+module.exports = { trending, popular, multiSearch, combinedContent };
