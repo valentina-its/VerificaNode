@@ -45,22 +45,17 @@ async function removeMovieFromList(listId, movieId) {
     );
 }
 
-async function updateMovieInList(listId, movieId, updateData) {
-    const validFields = ['rating', 'comment', 'status'];
-    const updates = {};
-    
-    for (const [key, value] of Object.entries(updateData)) {
-        if (validFields.includes(key)) {
-            updates[`movies.$.${key}`] = value;
-        }
-    }
+async function updateMovieInList(listId, movieId, data) {
+    const movieObjectId = new mongoose.Types.ObjectId(movieId);
+
+    const set = {};
+    if (data.rating !== undefined) set['movies.$.rating'] = data.rating;
+    if (data.comment !== undefined) set['movies.$.comment'] = data.comment;
+    if (data.status !== undefined) set['movies.$.status'] = data.status;
 
     return List.findOneAndUpdate(
-        { 
-            _id: listId,
-            'movies._id': new mongoose.Types.ObjectId(movieId)
-        },
-        { $set: updates },
+        { _id: listId, 'movies._id': movieObjectId },
+        { $set: set },
         { new: true }
     );
 }
