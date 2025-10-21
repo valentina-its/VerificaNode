@@ -8,8 +8,15 @@ async function createFavorite(data) {
         overview: data.overview,
         posterPath: data.posterPath,
         releaseDate: data.releaseDate,
-        voteAverage: data.voteAverage
+        voteAverage: data.voteAverage,
+        status: data.status,
+        comment: data.comment,
+        rating: data.rating
     });
+}
+
+async function updateFavorite(userId, tmdbId, data) {
+    return Favorite.findOneAndUpdate({ userId, tmdbId }, data, { new: true });
 }
 
 async function listFavoritesByUser(userId) {
@@ -23,5 +30,6 @@ async function deleteFavoriteByUserAndTmdbId(userId, tmdbId) {
 module.exports = {
     createFavorite,
     listFavoritesByUser,
-    deleteFavoriteByUserAndTmdbId
+    deleteFavoriteByUserAndTmdbId,
+    updateFavorite
 };

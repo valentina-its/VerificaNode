@@ -1,5 +1,5 @@
 const express = require('express');
-const { addFavorite, listFavorites, removeFavorite } = require('../controllers/favoritesController');
+const { addFavorite, listFavorites, removeFavorite, updateFavorite } = require('../controllers/favoritesController');
 
 const router = express.Router();
 
@@ -14,5 +14,6 @@ const wrap = (handler) => async (req, res, next) => {
 router.post('/', wrap(addFavorite));
 router.get('/', wrap(listFavorites));
 router.delete('/:tmdbId', wrap(removeFavorite));
+router.put('/:tmdbId', wrap(updateFavorite));
 
 module.exports = router;
