@@ -1,4 +1,3 @@
-const { getTrending } = require('../services/tmdb');
 const { fetchPopularMovie, fetchTrending } = require('../services/tmdbAxios');
 
 async function trending(req, res) {
