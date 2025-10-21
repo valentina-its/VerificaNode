@@ -25,7 +25,7 @@ const loginLimiter = rateLimit({
     max: config.rateLimitMax,
     standardHeaders: true,
     legacyHeaders: false,
-    message: { message: 'Troppi tentativi di login, riprova più tardi' }
+    message: { message: 'To much login attempts, please try again later' }
 });
 
 router.post('/login', loginLimiter, wrap(login));

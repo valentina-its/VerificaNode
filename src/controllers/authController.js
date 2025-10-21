@@ -15,8 +15,6 @@ async function register(req, res) {
         return res.status(400).json({ message: 'Invalid email format' });
     }
 
-
-
     const cleanEmail = validator.normalizeEmail(email);
     if (!cleanEmail || !validator.isEmail(cleanEmail)) {
         return res.status(400).json({ message: 'Invalid email format' });
