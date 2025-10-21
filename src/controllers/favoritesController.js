@@ -22,7 +22,7 @@ async function addFavorite(req, res) {
         return res.status(201).json(fav);
     } catch (err) {
         if (err.code === 11000) {
-            return res.status(409).json({ message: 'Film alredy in favorites' });
+            return res.status(409).json({ message: 'Film already in favorites' });
         }
         return res.status(500).json({ message: 'Internal server error' });
     }

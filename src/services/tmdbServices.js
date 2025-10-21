@@ -21,13 +21,16 @@ const fetchTrending = async (page = 1) => {
     return response.data;
 };
 
-<<<<<<<< HEAD:src/services/tmdbServices.js
-const searchSeriesTv = async (query, page = 1) => {
+const searchTv = async (query, page = 1) => {
     const safePage = !Number.isFinite(page) || page < 1 ? 1 : Math.min(page, 1000);
     const url = `${tmdbApiUrl}/search/tv`;
     const response = await axios.get(url, {
         params: { api_key: tmdbApiKey, query, page: safePage },
-========
+        timeout: 10000
+    });
+    return response.data;
+};
+
 const searchMulti = async (query, page = 1) => {
     const safePage = !Number.isFinite(page) || page < 1 ? 1 : Math.min(page, 1000);
     const url = `${tmdbApiUrl}/search/multi`;
@@ -37,14 +40,9 @@ const searchMulti = async (query, page = 1) => {
             query: query,
             page: safePage
         },
->>>>>>>> 0b11d729ac7b4175131756ae1ecf2a001ffd57fd:src/services/tmdbService.js
         timeout: 10000
     });
     return response.data;
 };
 
-<<<<<<<< HEAD:src/services/tmdbServices.js
-module.exports = { fetchPopularMovie, fetchTrending, searchSeriesTv };
-========
-module.exports = { fetchPopularMovie, fetchTrending, searchMulti };
->>>>>>>> 0b11d729ac7b4175131756ae1ecf2a001ffd57fd:src/services/tmdbService.js
+module.exports = { fetchPopularMovie, fetchTrending, searchTv };

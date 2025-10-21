@@ -10,7 +10,7 @@ async function trending(req, res) {
         const data = await fetchTrending(page);
         return res.json(data);
     } catch (_) {
-        return res.status(502).json({ message: 'Errore nel servizio TMDB' });
+        return res.status(502).json({ message: 'Error fetching trending data' });
     }
 }
 
@@ -26,7 +26,7 @@ async function popular(req, res) {
 async function searchTv(req, res) {
     const q = typeof req.query.q === 'string' ? req.query.q.trim() : '';
     if (!q || q.length < 2) {
-        return res.status(400).json({ message: 'Query troppo corta: usa almeno 2 caratteri (parametro q)' });
+        return res.status(400).json({ message: 'Parameter q is required and must be at least 2 characters long' });
     }
 
     let page = parseInt(req.query.page, 10);
@@ -37,7 +37,7 @@ async function searchTv(req, res) {
         const data = await searchTvApi(q, page);
         return res.json(data);
     } catch (error) {
-        return res.status(502).json({ message: 'Errore nel servizio TMDB' });
+        return res.status(502).json({ message: 'Error fetching TV series data' });
     }
 }
 

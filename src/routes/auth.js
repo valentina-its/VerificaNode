@@ -1,8 +1,4 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const validator = require('validator');
 const rateLimit = require('express-rate-limit');
 const { register, login } = require('../controllers/authController');
 const config = require('../config');
@@ -25,7 +21,7 @@ const loginLimiter = rateLimit({
     max: config.rateLimitMax,
     standardHeaders: true,
     legacyHeaders: false,
-    message: { message: 'To much login attempts, please try again later' }
+    message: { message: 'Too many login attempts, please try again later' }
 });
 
 router.post('/login', loginLimiter, wrap(login));
