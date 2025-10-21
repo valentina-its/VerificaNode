@@ -41,4 +41,4 @@ async function searchTv(req, res) {
     }
 }
 
-module.exports = { trending, popular, searchTv };
+module.exports = { trending, popular, multiSearch };
