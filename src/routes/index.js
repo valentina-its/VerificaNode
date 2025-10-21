@@ -8,7 +8,7 @@ const AllYourListsRoutes = require('./AllYourLists');
 const router = express.Router();
 
 router.use('/auth', authRoutes);
-router.use('/tmdb', tmdbRoutes);
+router.use('/all', auth, tmdbRoutes);
 router.use('/favorites', auth, favoritesRoutes);
 router.use('/AllYourLists', auth, AllYourListsRoutes);
 
