@@ -18,7 +18,7 @@ const fetchPopularTV = async (page = 1) => {
             },
             timeout: 10000
         });
-        return response.data.results;
+        return response.data;
     } catch (error) {
         console.error('Error fetching popular TV shows:', error.message);
         throw error;
