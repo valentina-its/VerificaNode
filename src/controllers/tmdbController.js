@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 const { getTrending } = require('../services/tmdb');
 const { fetchPopularMovie, fetchTrending, searchMulti } = require('../services/tmdbService');
+=======
+const { fetchPopularMovie, fetchTrending } = require('../services/tmdbAxios');
+>>>>>>> e5c22f8459f55a602de391e6c949bf6788bb8d98
 
 async function trending(req, res) {
     let page = parseInt(req.query.page, 10);
