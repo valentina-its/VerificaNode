@@ -1,4 +1,5 @@
 const listsService = require('../services/lists');
+const { fetchMovieById } = require('../services/tmdbServices');
 
 async function createList(req, res) {
     const userId = req.userId;
@@ -41,14 +42,46 @@ async function deleteList(req, res) {
 }
 
 async function addMovieToList(req, res) {
+    const userId = req.userId;
     const listId = req.params.listId;
-    const { tmdbId, title, overview, posterPath, releaseDate, voteAverage } = req.body;
+    const { tmdbId } = req.body;
+
+    const idNum = parseInt(tmdbId, 10);
+    if (!Number.isFinite(idNum) || idNum <= 0) {
+        return res.status(400).json({ message: 'tmdbId not valid' });
+    }
+
+    // verifica che la lista esista e appartenga all’utente
+    const list = await listsService.getListById(listId);
+    if (!list) {
+        return res.status(404).json({ message: 'List not found' });
+    }
+    if (String(list.userId) !== String(userId)) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    // prevenzione duplicati nella lista
+    const exists = (list.movies || []).some(m => m.tmdbId === idNum);
+    if (exists) {
+        return res.status(409).json({ message: 'Movie already in list' });
+    }
 
     try {
-        const updatedList = await listsService.addMovieToList(listId, { tmdbId, title, overview, posterPath, releaseDate, voteAverage });
-        return res.json(updatedList);
+        // recupero dettagli da TMDB
+        const data = await fetchMovieById(idNum);
+        const movieData = {
+            tmdbId: idNum,
+            title: data.title,
+            overview: data.overview,
+            posterPath: data.poster_path || null,
+            releaseDate: data.release_date || null,
+            voteAverage: data.vote_average
+        };
+
+        const updatedList = await listsService.addMovieToList(listId, movieData);
+        return res.status(201).json(updatedList);
     } catch (err) {
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(502).json({ message: 'TMDB service error' });
     }
 }
 
