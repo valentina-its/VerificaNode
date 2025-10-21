@@ -69,4 +69,18 @@ const fetchMovieById = async (tmdbId) => {
     return response.data;
 };
 
-module.exports = { fetchPopularMovie, fetchTrending, fetchMovieById, searchTv, searchMulti };
+// Aggiunta: combinazione di Trending + Popular
+const fetchCombinedContent = async () => {
+    try {
+        const [trendingData, popularData] = await Promise.all([
+            fetchTrending(1),
+            fetchPopularMovie()
+        ]);
+        return { trending: trendingData, popular: popularData };
+    } catch (error) {
+        console.error('Error fetching combined content:', error.message);
+        throw error;
+    }
+};
+
+module.exports = { fetchPopularMovie, fetchTrending, fetchMovieById, searchTv, searchMulti, fetchCombinedContent };
