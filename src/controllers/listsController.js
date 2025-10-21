@@ -51,7 +51,7 @@ async function addMovieToList(req, res) {
         return res.status(400).json({ message: 'tmdbId not valid' });
     }
 
-    // verifica che la lista esista e appartenga all’utente
+
     const list = await listsService.getListById(listId);
     if (!list) {
         return res.status(404).json({ message: 'List not found' });
@@ -60,14 +60,13 @@ async function addMovieToList(req, res) {
         return res.status(403).json({ message: 'Forbidden' });
     }
 
-    // prevenzione duplicati nella lista
     const exists = (list.movies || []).some(m => m.tmdbId === idNum);
     if (exists) {
         return res.status(409).json({ message: 'Movie already in list' });
     }
 
     try {
-        // recupero dettagli da TMDB
+      
         const data = await fetchMovieById(idNum);
         const movieData = {
             tmdbId: idNum,
