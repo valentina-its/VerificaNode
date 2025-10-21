@@ -1,4 +1,4 @@
-const { fetchPopularMovie, fetchTrending } = require('../services/tmdbAxios');
+const { fetchPopularMovie, fetchTrending, searchTv: searchTvApi } = require('../services/tmdbServices');
 
 async function trending(req, res) {
     let page = parseInt(req.query.page, 10);
@@ -7,15 +7,10 @@ async function trending(req, res) {
     if (page > 1000) page = 1000;
 
     try {
-        const data = await getTrending(page);
+        const data = await fetchTrending(page);
         return res.json(data);
-    } catch (err) {
-        try {
-            const data = await fetchTrending(page);
-            return res.json(data);
-        } catch (_) {
-            return res.status(502).json({ message: 'Errore nel servizio TMDB' });
-        }
+    } catch (_) {
+        return res.status(502).json({ message: 'Errore nel servizio TMDB' });
     }
 }
 
@@ -28,4 +23,22 @@ async function popular(req, res) {
     }
 }
 
-module.exports = { trending, popular };
+async function searchTv(req, res) {
+    const q = typeof req.query.q === 'string' ? req.query.q.trim() : '';
+    if (!q || q.length < 2) {
+        return res.status(400).json({ message: 'Query troppo corta: usa almeno 2 caratteri (parametro q)' });
+    }
+
+    let page = parseInt(req.query.page, 10);
+    if (!Number.isFinite(page) || page < 1) page = 1;
+    if (page > 1000) page = 1000;
+
+    try {
+        const data = await searchTvApi(q, page);
+        return res.json(data);
+    } catch (error) {
+        return res.status(502).json({ message: 'Errore nel servizio TMDB' });
+    }
+}
+
+module.exports = { trending, popular, searchTv };

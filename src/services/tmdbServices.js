@@ -21,4 +21,14 @@ const fetchTrending = async (page = 1) => {
     return response.data;
 };
 
-module.exports = { fetchPopularMovie, fetchTrending };
+const searchSeriesTv = async (query, page = 1) => {
+    const safePage = !Number.isFinite(page) || page < 1 ? 1 : Math.min(page, 1000);
+    const url = `${tmdbApiUrl}/search/tv`;
+    const response = await axios.get(url, {
+        params: { api_key: tmdbApiKey, query, page: safePage },
+        timeout: 10000
+    });
+    return response.data;
+};
+
+module.exports = { fetchPopularMovie, fetchTrending, searchSeriesTv };
