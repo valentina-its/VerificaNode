@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const validator = require('validator');
 const User = require('../models/User');
 const { signToken } = require('../utils/jwt');
-const authService = require('../services/auth');
+const authService = require('../services/authServices');
 
 async function register(req, res) {
     const { email, password } = req.body;
@@ -14,8 +14,6 @@ async function register(req, res) {
     if (!validator.isEmail(email)) {
         return res.status(400).json({ message: 'Invalid email format' });
     }
-
-
 
     const cleanEmail = validator.normalizeEmail(email);
     if (!cleanEmail || !validator.isEmail(cleanEmail)) {

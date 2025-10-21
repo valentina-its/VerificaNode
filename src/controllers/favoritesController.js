@@ -1,4 +1,4 @@
-const favoritesService = require('../services/favorites');
+const favoritesService = require('../services/favoritesServices');
 
 async function addFavorite(req, res) {
     const userId = req.userId;
