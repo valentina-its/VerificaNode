@@ -1,4 +1,5 @@
 const List = require('../models/List');
+const mongoose = require('mongoose');
 
 async function createList(data) {
     return List.create({
@@ -29,9 +30,10 @@ async function addMovieToList(listId, movieData) {
 }
 
 async function removeMovieFromList(listId, movieId) {
+    const movieObjectId = new mongoose.Types.ObjectId(movieId);
     return List.findByIdAndUpdate(
         listId,
-        { $pull: { movies: { _id: movieId } } },
+        { $pull: { movies: { _id: movieObjectId } } },
         { new: true }
     );
 }

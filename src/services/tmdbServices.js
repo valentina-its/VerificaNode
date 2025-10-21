@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { tmdbApiKey, tmdbApiUrl } = require('../config');
 
-const fetchPopularMovie = async () => { // Funzione per ottenere i film popolari da TMDB
+const fetchPopularMovie = async () => {
     try {
         const response = await axios.get(`${tmdbApiUrl}/movie/popular?api_key=${tmdbApiKey}`);
         return response.data;
@@ -45,4 +45,17 @@ const searchMulti = async (query, page = 1) => {
     return response.data;
 };
 
-module.exports = { fetchPopularMovie, fetchTrending, searchTv };
+const fetchMovieById = async (tmdbId) => {
+    const idNum = parseInt(tmdbId, 10);
+    if (!Number.isFinite(idNum) || idNum <= 0) {
+        throw new Error('Invalid tmdbId');
+    }
+    const url = `${tmdbApiUrl}/movie/${idNum}`;
+    const response = await axios.get(url, {
+        params: { api_key: tmdbApiKey },
+        timeout: 10000
+    });
+    return response.data;
+};
+
+module.exports = { fetchPopularMovie, fetchTrending, fetchMovieById, searchTv, searchMulti };

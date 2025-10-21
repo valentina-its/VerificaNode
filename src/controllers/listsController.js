@@ -1,5 +1,6 @@
 const listsService = require('../services/lists');
 const { fetchMovieById } = require('../services/tmdbServices');
+const mongoose = require('mongoose');
 
 async function createList(req, res) {
     const userId = req.userId;
@@ -86,7 +87,25 @@ async function addMovieToList(req, res) {
 }
 
 async function removeMovieFromList(req, res) {
+    const userId = req.userId;
     const { listId, movieId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(movieId)) {
+        return res.status(400).json({ message: 'movieId not valid' });
+    }
+
+    const list = await listsService.getListById(listId);
+    if (!list) {
+        return res.status(404).json({ message: 'List not found' });
+    }
+    if (String(list.userId) !== String(userId)) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    const exists = (list.movies || []).some(m => String(m._id) === String(movieId));
+    if (!exists) {
+        return res.status(404).json({ message: 'Movie not found in list' });
+    }
 
     try {
         const updatedList = await listsService.removeMovieFromList(listId, movieId);
